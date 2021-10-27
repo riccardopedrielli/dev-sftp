@@ -13,8 +13,8 @@ services:
     volumes:
       - ./scripts:/etc/sftp.d:ro
       - ${SFTP_USERS_FILE}:/etc/sftp/users.conf:ro
-      - ${SFTP_DATA_DIR}/ssh:/opt/ssh/keys
-      - ${SFTP_DATA_DIR}/data:/home
+      - ${SFTP_DATA_DIR}/${SFTP_SSH_KEYS_DIR}:/opt/ssh/keys
+      - ${SFTP_DATA_DIR}/${SFTP_FTP_DATA_DIR}:/home
     logging:
       driver: local
 
