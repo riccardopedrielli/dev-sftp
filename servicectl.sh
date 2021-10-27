@@ -24,11 +24,12 @@ print_usage()
     echo "Usage: ${SCRIPT} <command>"
     echo
     echo "Commands:"
-    echo "    up       Bring up the service."
-    echo "    down     Bring down the service."
-    echo "    prune    Bring down the service and delete the data."
-    echo "    info     Show informations about the service: name, config, status."
-    echo "    logs     Show service's logs, takes the same arguments as \"docker-compose logs\"."
+    echo "    up                     Bring up the service."
+    echo "    down                   Bring down the service."
+    echo "    prune                  Bring down the service and delete the data."
+    echo "    info                   Show informations about the service: name, config, status."
+    echo "    logs                   Show service's logs, takes the same arguments as \"docker-compose logs\"."
+    echo "    encrypt  <password>    Print the <password> encrypted."
     echo
 
     exit 1
@@ -135,6 +136,18 @@ service_logs()
     docker-compose -p ${SERVICE} logs ${ARGS[@]:-}
 }
 
+service_encrypt()
+{
+    PLAIN_PASSWORD="${ARGS[0]:-}"
+
+    if [ -z "${PLAIN_PASSWORD}" ]; then
+        echo_error "Error: missing argument <password>"
+        print_usage
+    fi
+
+    echo -n "${PLAIN_PASSWORD}" | docker run -i --rm atmoz/makepasswd:latest --crypt-md5 --clearfrom=-
+}
+
 main()
 {
     check_bin docker
@@ -164,6 +177,10 @@ main()
 
         logs)
             service_logs
+            ;;
+
+        encrypt)
+            service_encrypt
             ;;
 
         *)

@@ -41,13 +41,14 @@ There's no need to manually create directory, Docker Compose will take care if i
 
 To manage the service, execute `./servicectl.sh <command>`.
 
-| Command | Description                                                             |
-| :------ | :---------------------------------------------------------------------- |
-| `up`    | Bring up the service.                                                   |
-| `down`  | Bring down the service.                                                 |
-| `prune` | Bring down the service and delete the data.                             |
-| `info`  | Show informations about the service: name, config, status.              |
-| `logs`  | Show service's logs, takes the same arguments as `docker-compose logs`. |
+| Command   | Arguments    | Description                                                             |
+| :-------- | :----------- | :---------------------------------------------------------------------- |
+| `up`      |              | Bring up the service.                                                   |
+| `down`    |              | Bring down the service.                                                 |
+| `prune`   |              | Bring down the service and delete the data.                             |
+| `info`    |              | Show informations about the service: name, config, status.              |
+| `logs`    |              | Show service's logs, takes the same arguments as `docker-compose logs`. |
+| `encrypt` | `<password>` | Print the `<password>` encrypted.                                       |
 
 ### Host
 
@@ -72,7 +73,17 @@ can be inspected with `docker-machine ip`.
 
 It is advised to create a new `users.conf` file and set its path in `SFTP_USERS_FILE` variable in the `settings.env` file described in [Configuration](#configuration).
 
-The users must be added one per line in the following format:  
-`name:password:uid:gid:directory`.
+The users must be added one per line in one of the the following formats:
 
-For example, the default user is defined as: `dev:dev:1000:1000:shared`.
+- `name:password:uid:gid:directory`
+- `name:password:e:uid:gid:directory`
+
+Use `e` as third field to indicate that the password is encrypted.
+
+For example, the default user is defined as:
+
+- `dev:dev:1000:1000:shared`
+
+Using the same password, but encypted, it would become:
+
+- `dev:$1$5IAOH81k$YFBj.Uu42fwcJiZPzPHb.1:e:1000:1000:shared`
