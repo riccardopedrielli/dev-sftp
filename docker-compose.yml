@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  dev-sftp:
+    image: atmoz/sftp:${SFTP_IMAGE_TAG}
+    container_name: dev-sftp
+    hostname: dev-sftp
+    restart: unless-stopped
+    ports:
+      - "${SFTP_PORT}:22"
+    networks:
+      - dev-sftp
+    volumes:
+      - ./scripts:/etc/sftp.d:ro
+      - ${SFTP_USERS_FILE}:/etc/sftp/users.conf:ro
+      - ${SFTP_DATA_DIR}/ssh:/opt/ssh/keys
+      - ${SFTP_DATA_DIR}/data:/home
+    logging:
+      driver: local
+
+networks:
+  dev-sftp:
+    name: dev-sftp
