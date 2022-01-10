@@ -47,7 +47,7 @@ To manage the service, execute `./servicectl.sh <command>`.
 | `down`    |              | Bring down the service.                                                 |
 | `prune`   |              | Bring down the service and delete the data.                             |
 | `info`    |              | Show informations about the service: name, config, status.              |
-| `logs`    |              | Show service's logs, takes the same arguments as `docker-compose logs`. |
+| `logs`    |              | Show service's logs, takes the same arguments as `docker compose logs`. |
 | `encrypt` | `<password>` | Print the `<password>` encrypted.                                       |
 
 ### Host
