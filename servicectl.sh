@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=SC2155,SC1090
-
-set -Eeuo pipefail
-trap 'echo_error Error: program exited with status ${?}' ERR
+set -Eeu
+trap 'echo "Error: ${SCRIPT} - Function: ${FUNCNAME:-global context} - Line: ${LINENO} - Status: ${?}"' ERR
 
 # Arguments
-readonly SCRIPT_DIR="$(cd "$(dirname "${0}")" && pwd)"
+# shellcheck disable=SC2155
 readonly SCRIPT=$(basename "${0}")
 readonly COMMAND="${1:-}"
 readonly ARGS=("${@:2}")
@@ -53,10 +51,12 @@ load_settings()
     set -o allexport
 
     if [ -r "${SETTINGS_FILE}" ]; then
+        # shellcheck disable=SC1090
         source "${SETTINGS_FILE}"
     fi
 
     if [ -r "${EXTERNAL_SETTINGS_FILE}" ]; then
+        # shellcheck disable=SC1090
         source "${EXTERNAL_SETTINGS_FILE}"
     fi
 
@@ -152,7 +152,7 @@ main()
 {
     check_bin docker
 
-    cd "${SCRIPT_DIR}"
+    cd "$(dirname "${0}")"
 
     load_settings
 

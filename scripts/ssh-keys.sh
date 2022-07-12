@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
+set -Eeu
 
 readonly KEY_FILE_DIR="/etc/ssh"
 readonly KEY_FILE_BAK_DIR="/opt/ssh/keys"
