@@ -75,15 +75,26 @@ It is advised to create a new `users.conf` file and set its path in `SFTP_USERS_
 
 The users must be added one per line in one of the the following formats:
 
-- `name:password:uid:gid:directory`
-- `name:password:e:uid:gid:directory`
+- `name:password:uid`
+- `name:password:e:uid`
 
 Use `e` as third field to indicate that the password is encrypted.
 
 For example, the default user is defined as:
 
-- `dev:dev:1000:1000:shared`
+- `dev:dev:1000`
 
 Using the same password, but encypted, it would become:
 
-- `dev:$1$5IAOH81k$YFBj.Uu42fwcJiZPzPHb.1:e:1000:1000:shared`
+- `dev:$1$2NyNFvrG$Hj53mHXZBsuMmUPMPb6u41:e:1000`
+
+The `uid` field is also the user home.  
+In the former example, the absolute path of the user home would be `/home/1000`.  
+If two users have the same `uid`, they will have the same home directory,
+this is useful in case more users need to access the same files.  
+Example:
+
+```text
+user1:pwd1:1000
+user2:pwd2:1000
+```

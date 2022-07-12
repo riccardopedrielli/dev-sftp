@@ -11,7 +11,8 @@ services:
     networks:
       - dev-sftp
     volumes:
-      - ./scripts:/etc/sftp.d:ro
+      - ./scripts/ssh-keys.sh:/etc/sftp.d/ssh-keys.sh:ro
+      - ./scripts/create-sftp-user:/usr/local/bin/create-sftp-user:ro
       - ${SFTP_USERS_FILE}:/etc/sftp/users.conf:ro
       - ${SFTP_DATA_DIR}/${SFTP_SSH_KEYS_DIR}:/opt/ssh/keys
       - ${SFTP_DATA_DIR}/${SFTP_FTP_DATA_DIR}:/home

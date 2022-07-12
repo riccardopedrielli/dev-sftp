@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -Eeu
+
+# shellcheck disable=2154
+trap 'STATUS=${?}; echo "${0}: Error on line ${LINENO}: ${BASH_COMMAND}"; exit ${STATUS}' ERR
+
+# Regular expression for arguments
+readonly reUser='[A-Za-z0-9._][A-Za-z0-9._-]{0,31}'
+readonly rePass='[^:]{0,255}'
+readonly reUid='[[:digit:]]*'
+
+log()
+{
+    echo "[${0}] ${*}"
+}
+
+validateArg()
+{
+    local -r name="${1}"
+    local -r val="${2}"
+    local -r regEx="${3}"
+
+    if [[ "${val}" =~ ^${regEx}$ ]]; then
+        return 0
+    else
+        log "ERROR: Invalid ${name} \"${val}\", does not match required regex pattern: ${regEx}"
+        return 1
+    fi
+}
+
+main()
+{
+    log "Parsing user data: \"${1}\""
+    IFS=':' read -ra args <<< "${1}"
+
+    local skipIndex=0
+    local chpasswdOptions=""
+
+    local -r user="${args[0]}"; validateArg "username" "${user}" "${reUser}" || exit 1
+    local -r pass="${args[1]}"; validateArg "password" "${pass}" "${rePass}" || exit 1
+
+    if [ "${args[2]}" == "e" ]; then
+        chpasswdOptions="-e"
+        skipIndex=1
+    fi
+
+    local -r uid="${args[$((skipIndex+2))]}"; validateArg "UID" "${uid}" "${reUid}" || exit 1
+
+    local -r homeDir="/home/${uid}"
+    useradd "${user}" --no-user-group --non-unique --uid "${uid}" --home-dir "${homeDir}"
+    mkdir -p "${homeDir}"
+    chown root:root "${homeDir}"
+    mkdir -p "${homeDir}/data"
+    chown "${uid}:${uid}" "${homeDir}/data"
+
+    echo "${user}:${pass}" | chpasswd ${chpasswdOptions}
+}
+
+main "${1}"
