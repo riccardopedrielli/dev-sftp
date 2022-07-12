@@ -75,8 +75,8 @@ It is advised to create a new `users.conf` file and set its path in `SFTP_USERS_
 
 The users must be added one per line in one of the the following formats:
 
-- `name:password:uid`
-- `name:password:e:uid`
+- `name:password:uid:[dir]`
+- `name:password:e:uid:[dir]`
 
 Use `e` as third field to indicate that the password is encrypted.
 
@@ -98,3 +98,6 @@ Example:
 user1:pwd1:1000
 user2:pwd2:1000
 ```
+
+The `dir` field is optional and defaults to `data`.
+In case of multiple users with the same `uid`, be sure to specify the same `dir` for all.

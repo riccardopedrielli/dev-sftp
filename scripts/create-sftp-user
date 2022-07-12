@@ -8,6 +8,7 @@ trap 'STATUS=${?}; echo "${0}: Error on line ${LINENO}: ${BASH_COMMAND}"; exit $
 readonly reUser='[A-Za-z0-9._][A-Za-z0-9._-]{0,31}'
 readonly rePass='[^:]{0,255}'
 readonly reUid='[[:digit:]]*'
+readonly reDir='[^:]*'
 
 log()
 {
@@ -45,13 +46,14 @@ main()
     fi
 
     local -r uid="${args[$((skipIndex+2))]}"; validateArg "UID" "${uid}" "${reUid}" || exit 1
+    local -r dir="${args[$((skipIndex+3))]:-data}"; validateArg "dirs" "${dir}" "${reDir}" || exit 1
 
     local -r homeDir="/home/${uid}"
     useradd "${user}" --no-user-group --non-unique --uid "${uid}" --home-dir "${homeDir}"
     mkdir -p "${homeDir}"
     chown root:root "${homeDir}"
-    mkdir -p "${homeDir}/data"
-    chown "${uid}:${uid}" "${homeDir}/data"
+    mkdir -p "${homeDir}/${dir}"
+    chown "${uid}:${uid}" "${homeDir}/${dir}"
 
     echo "${user}:${pass}" | chpasswd ${chpasswdOptions}
 }
